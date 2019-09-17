@@ -1,0 +1,35 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2.1
+jobs:
+  build:
+    docker:
+      # specify the version
+      - image: circleci/golang:1.12.4
+      - image: circleci/mysql:5.7
+        command: mysqld --sql_mode="ONLY_FULL_GROUP_BY,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test
+
+    #### TEMPLATE_NOTE: go expects specific checkout path representing url
+    #### expecting it in the form of
+    ####   /go/src/github.com/circleci/go-tool
+    ####   /go/src/bitbucket.org/circleci/go-tool
+    working_directory: ~/wiseer
+    steps:
+      - checkout
+
+      # specify any bash command here prefixed with `run: `
+      - run: go get -u github.com/stretchr/testify
+      - run: touch coverage.txt
+      - run: go mod vendor
+      - run: go generate -tags=integration ./...
+      - run: go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
+      - run: bash <(curl -s https://codecov.io/bash)
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
