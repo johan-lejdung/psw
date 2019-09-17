@@ -23,9 +23,6 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: go get -u github.com/stretchr/testify
-      - run: go get github.com/vektra/mockery/
-      - run: go get github.com/vektra/mockery/.../
-      - run: go get github.com/google/wire/cmd/wire
       - run: touch coverage.txt
       - run: go mod vendor
       - run: go generate -tags=integration ./...
