@@ -2,16 +2,6 @@
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2.1
-commands:
-  testservice:
-    description: "Contains steps needed to test a Go service"
-    parameters:
-    steps:
-      - run: go mod vendor
-      - run: go generate -tags=integration ./...
-      - run: go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
-      - run: cat coverage.txt >> ../../coverage.txt
-
 jobs:
   build:
     docker:
@@ -37,7 +27,9 @@ jobs:
       - run: go get github.com/vektra/mockery/.../
       - run: go get github.com/google/wire/cmd/wire
       - run: touch coverage.txt
-      - testservice:
+      - run: go mod vendor
+      - run: go generate -tags=integration ./...
+      - run: go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
       - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
