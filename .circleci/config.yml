@@ -22,9 +22,7 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run: go get -u github.com/stretchr/testify
       - run: touch coverage.txt
-      - run: go mod vendor
       - run: go generate -tags=integration ./...
       - run: go test -v -race -coverprofile=coverage.txt -covermode=atomic -tags=integration ./...
       - run: bash <(curl -s https://codecov.io/bash)
