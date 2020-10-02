@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	psw "github.com/johan-lejdung/pubsub-wrapper"
+	psw "github.com/johan-lejdung/psw"
 
 	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/pubsub/pstest"
